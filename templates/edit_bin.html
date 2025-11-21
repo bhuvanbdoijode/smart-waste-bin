@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Bin - Smart Waste Bin{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0"><i class="bi bi-pencil-square"></i> Edit Waste Bin</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('edit_bin', bin_id=bin.id) }}">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="location" class="form-label">Location *</label>
+                            <input type="text" class="form-control" id="location" name="location" 
+                                   value="{{ bin.location }}" required>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="type" class="form-label">Waste Type *</label>
+                            <select class="form-select" id="type" name="type" required>
+                                <option value="General" {% if bin.type == 'General' %}selected{% endif %}>General Waste</option>
+                                <option value="Recyclable" {% if bin.type == 'Recyclable' %}selected{% endif %}>Recyclable</option>
+                                <option value="Organic" {% if bin.type == 'Organic' %}selected{% endif %}>Organic</option>
+                                <option value="Hazardous" {% if bin.type == 'Hazardous' %}selected{% endif %}>Hazardous</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="capacity" class="form-label">Capacity (Liters) *</label>
+                            <input type="number" class="form-control" id="capacity" name="capacity" 
+                                   value="{{ bin.capacity }}" min="1" required>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="fill_level" class="form-label">Fill Level (%) *</label>
+                            <input type="number" class="form-control" id="fill_level" name="fill_level" 
+                                   value="{{ bin.fill_level }}" min="0" max="100" required>
+                            <div class="form-text">0-100%</div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Cancel
+                        </a>
+                        <button type="submit" class="btn btn-warning">
+                            <i class="bi bi-check-circle"></i> Update Bin
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

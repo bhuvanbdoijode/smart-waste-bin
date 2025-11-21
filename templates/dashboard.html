@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Smart Waste Bin{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-speedometer2"></i> Dashboard</h2>
+    <div>
+        <span class="badge bg-info">Auto-refresh: 3s</span>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-4" id="stats-container">
+    <div class="col-md-3">
+        <div class="card stat-card bg-primary text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-subtitle mb-2">Total Bins</h6>
+                        <h2 class="card-title mb-0" id="stat-total">0</h2>
+                    </div>
+                    <i class="bi bi-trash3 stat-icon"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card stat-card bg-danger text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-subtitle mb-2">Full (≥80%)</h6>
+                        <h2 class="card-title mb-0" id="stat-full">0</h2>
+                    </div>
+                    <i class="bi bi-exclamation-triangle stat-icon"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+    <div class="col-md-3">
+        <div class="card stat-card bg-warning text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-subtitle mb-2">Half (50-79%)</h6>
+                        <h2 class="card-title mb-0" id="stat-half">0</h2>
+                    </div>
+                    <i class="bi bi-dash-circle stat-icon"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card stat-card bg-success text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-subtitle mb-2">Empty (<50%)</h6>
+                        <h2 class="card-title mb-0" id="stat-empty">0</h2>
+                    </div>
+                    <i class="bi bi-check-circle stat-icon"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card p-3 mb-4">
+    <h5>Upload Dustbin Image</h5>
+    <form action="/detect" method="POST" enctype="multipart/form-data">
+        <input type="file" name="image" accept="image/*" capture="camera" class="form-control mt-2" required>
+        <button type="submit" class="btn btn-primary mt-3">Upload & Detect Fill</button>
+    </form>
+</div>
+
+<div class="card p-3 mb-4">
+    <h5>Webcam Dustbin Detection</h5>
+
+    <video id="video" width="300" height="220" autoplay class="border rounded"></video>
+
+    <button id="captureBtn" class="btn btn-success mt-3">Capture & Detect</button>
+
+    <canvas id="canvas" width="300" height="220" hidden></canvas>
+</div>
+
+<script src="/static/js/dashboard.js"></script>
+
+<!-- Bins Table -->
+<div class="card shadow">
+    <div class="card-header bg-dark text-white">
+        <h5 class="mb-0"><i class="bi bi-list-ul"></i> All Waste Bins</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover" id="bins-table">
+                <thead>
+                    <tr>
+                        <th>Bin ID</th>
+                        <th>Location</th>
+                        <th>Type</th>
+                        <th>Fill Level</th>
+                        <th>Status</th>
+                        <th>Last Updated</th>
+                        {% if user.role == 'admin' %}
+                        <th>Actions</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody id="bins-tbody">
+                    <tr>
+                        <td colspan="{% if user.role == 'admin' %}7{% else %}6{% endif %}" class="text-center">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+<script>
+    const isAdminStr = "{{ 'true' if user.role == 'admin' else 'false' }}";
+    const isAdmin = isAdminStr === "true";
+    initDashboard(isAdmin);
+</script>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Add Bin - Smart Waste Bin{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="bi bi-plus-circle"></i> Add New Waste Bin</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('add_bin') }}">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="location" class="form-label">Location *</label>
+                            <input type="text" class="form-control" id="location" name="location" 
+                                   placeholder="e.g., Building A - Floor 1" required>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="type" class="form-label">Waste Type *</label>
+                            <select class="form-select" id="type" name="type" required>
+                                <option value="General">General Waste</option>
+                                <option value="Recyclable">Recyclable</option>
+                                <option value="Organic">Organic</option>
+                                <option value="Hazardous">Hazardous</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="capacity" class="form-label">Capacity (Liters) *</label>
+                            <input type="number" class="form-control" id="capacity" name="capacity" 
+                                   value="100" min="1" required>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="fill_level" class="form-label">Initial Fill Level (%) *</label>
+                            <input type="number" class="form-control" id="fill_level" name="fill_level" 
+                                   value="0" min="0" max="100" required>
+                            <div class="form-text">0-100%</div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Cancel
+                        </a>
+                        <button type="submit" class="btn btn-success">
+                            <i class="bi bi-check-circle"></i> Add Bin
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
